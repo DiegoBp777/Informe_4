@@ -266,13 +266,13 @@ En esta sección se presentan las evidencias del desarrollo, simulación y monta
 
 Se presenta el funcionamiento del contador durante la simulación, verificando la visualización de las decenas y unidades.
 
-![Simulación del contador en Proteus](imagenes/simulacion_proteus.png)
+<img src="Imagenes/simulacion.jpeg" width="500">
 
 ### 9.2. Montaje físico del circuito
 
 Se muestra el montaje realizado en la protoboard, incluyendo el microcontrolador, los displays, los pulsadores y las conexiones de alimentación.
 
-![Montaje físico de la práctica](imagenes/montaje_fisico.png)
+<img src="Imagenes/montaje.jpeg" width="500">
 
 ## 10. Dificultades y soluciones
 
