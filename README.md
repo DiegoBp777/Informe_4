@@ -1,5 +1,11 @@
 # Práctica 4: Contador digital de 00 a 99 con displays de 7 segmentos
+## Integrantes
 
+- **Jareth Santiago Escamilla Marquez** - [@jarethescamilla](https://github.com/jarethescamilla)
+- **Diego Alexander Baron Pacheco** - [@DiegoBp777](https://github.com/DiegoBp777)
+- **Fredy Vicente Patiño Garzon** - [@fredyvipatinoga-crypto](https://github.com/fredyvipatinoga-crypto)
+
+---
 ## Tabla de contenido
 
 1. [Introducción](#1-introducción)
@@ -256,49 +262,17 @@ FIN
 
 En esta sección se presentan las evidencias del desarrollo, simulación y montaje físico de la práctica.
 
-### 9.1. Código desarrollado en MPLAB X IDE
-
-Se presenta el código fuente utilizado para configurar el microcontrolador, leer los pulsadores, actualizar el contador y controlar la multiplexación de los displays.
-
-![Código desarrollado en MPLAB X IDE](imagenes/codigo_mplab.png)
-
-### 9.2. Circuito diseñado en Proteus
-
-Se muestra el circuito de simulación con el PIC18F45K22, los dos displays de siete segmentos, los pulsadores y las resistencias correspondientes.
-
-![Circuito implementado en Proteus](imagenes/circuito_proteus.png)
-
-### 9.3. Simulación del contador en Proteus
+### 9.1. Simulación del contador en Proteus
 
 Se presenta el funcionamiento del contador durante la simulación, verificando la visualización de las decenas y unidades.
 
 ![Simulación del contador en Proteus](imagenes/simulacion_proteus.png)
 
-### 9.4. Montaje físico del circuito
+### 9.2. Montaje físico del circuito
 
 Se muestra el montaje realizado en la protoboard, incluyendo el microcontrolador, los displays, los pulsadores y las conexiones de alimentación.
 
 ![Montaje físico de la práctica](imagenes/montaje_fisico.png)
-
-### 9.5. Prueba del incremento
-
-En esta evidencia se observa el comportamiento del contador al presionar el pulsador de incremento, verificando que el valor aumenta una unidad por pulsación.
-
-![Prueba del contador ascendente](imagenes/contador_ascendente.png)
-
-### 9.6. Prueba del decremento
-
-Se evidencia el funcionamiento del pulsador de decremento, comprobando que el contador disminuye una unidad por pulsación.
-
-![Prueba del contador descendente](imagenes/contador_descendente.png)
-
-### 9.7. Prueba de los límites del contador
-
-Se verifica que el contador regresa a 00 después de alcanzar 99 al incrementar y que pasa a 99 cuando se disminuye desde 00.
-
-![Prueba de los límites del contador](imagenes/limites_contador.png)
-
-> **Nota:** reemplazar las rutas de las imágenes por los nombres reales de los archivos guardados en la carpeta `imagenes` del repositorio.
 
 ## 10. Dificultades y soluciones
 
