@@ -257,6 +257,277 @@ FIN
            v
     Repetir ciclo
 ```
+### 8.3. Codigo
+
+```
+/*
+ * File:   main.c
+ * Author: LOS MAKIAS
+ *
+ * Practica 4
+ * Contador 00-99 con multiplexacion
+ * PIC18F45K22
+ */
+
+#include <xc.h>
+
+// ======================================================
+// CONFIGURACION DEL MICROCONTROLADOR
+// ======================================================
+
+#pragma config FOSC = INTIO67
+#pragma config WDTEN = OFF
+#pragma config LVP = OFF
+
+#define _XTAL_FREQ 1000000
+
+
+// ======================================================
+// TABLA DE SEGMENTOS
+// DISPLAY 5161AS - CATODO COMUN
+//
+// RD0 -> A
+// RD1 -> B
+// RD2 -> C
+// RD3 -> D
+// RD4 -> E
+// RD5 -> F
+// RD6 -> G
+//
+// 0 = segmento apagado
+// 1 = segmento encendido
+// ======================================================
+
+const unsigned char segmentos[10] = {
+
+    0b0111111,   // 0
+    0b0000110,   // 1
+    0b1011011,   // 2
+    0b1001111,   // 3
+    0b1100110,   // 4
+    0b1101101,   // 5
+    0b1111101,   // 6
+    0b0000111,   // 7
+    0b1111111,   // 8
+    0b1101111    // 9
+
+};
+
+
+// ======================================================
+// FUNCION PARA MOSTRAR EL NUMERO
+// ======================================================
+
+void mostrar_display(unsigned char numero)
+{
+    unsigned char decenas;
+    unsigned char unidades;
+
+    // Separar el numero en decenas y unidades
+    decenas = numero / 10;
+    unidades = numero % 10;
+
+
+    // ==================================================
+    // APAGAR AMBOS DISPLAYS
+    // ==================================================
+
+    LATBbits.LATB0 = 1;
+    LATBbits.LATB1 = 1;
+
+
+    // ==================================================
+    // MOSTRAR DECENAS
+    // ==================================================
+
+    // Cargar segmentos de las decenas
+    LATD = segmentos[decenas];
+
+    // Activar display de decenas
+    // Catodo comun -> LOW = ENCENDIDO
+    LATBbits.LATB0 = 0;
+
+    __delay_ms(5);
+
+    // Apagar display de decenas
+    LATBbits.LATB0 = 1;
+
+
+    // ==================================================
+    // MOSTRAR UNIDADES
+    // ==================================================
+
+    // Cargar segmentos de las unidades
+    LATD = segmentos[unidades];
+
+    // Activar display de unidades
+    // Catodo comun -> LOW = ENCENDIDO
+    LATBbits.LATB1 = 0;
+
+    __delay_ms(5);
+
+    // Apagar display de unidades
+    LATBbits.LATB1 = 1;
+}
+
+
+// ======================================================
+// PROGRAMA PRINCIPAL
+// ======================================================
+
+void main(void)
+{
+    unsigned char contador = 0;
+
+
+    // ==================================================
+    // OSCILADOR INTERNO
+    // ==================================================
+
+    // Oscilador interno a 1 MHz
+    OSCCON = 0b10000000;
+
+
+    // ==================================================
+    // CONFIGURAR PINES COMO DIGITALES
+    // ==================================================
+
+    ANSELA = 0;
+    ANSELB = 0;
+    ANSELD = 0;
+
+
+    // ==================================================
+    // CONFIGURAR ENTRADAS
+    // ==================================================
+
+    // RA0 = pulsador UP
+    // RA1 = pulsador DOWN
+
+    TRISAbits.TRISA0 = 1;
+    TRISAbits.TRISA1 = 1;
+
+
+    // ==================================================
+    // CONFIGURAR SALIDAS
+    // ==================================================
+
+    // RD0-RD6 = segmentos
+    TRISD = 0x00;
+
+    // RB0 = display de decenas
+    // RB1 = display de unidades
+
+    TRISBbits.TRISB0 = 0;
+    TRISBbits.TRISB1 = 0;
+
+
+    // ==================================================
+    // ESTADO INICIAL
+    // ==================================================
+
+    // Apagar segmentos
+    LATD = 0x00;
+
+    // Apagar ambos displays
+    //
+    // Como son de catodo comun y estan conectados
+    // directamente a RB0 y RB1:
+    //
+    // RB = 1 -> APAGADO
+    // RB = 0 -> ENCENDIDO
+
+    LATBbits.LATB0 = 1;
+    LATBbits.LATB1 = 1;
+
+
+    // ==================================================
+    // BUCLE PRINCIPAL
+    // ==================================================
+
+    while(1)
+    {
+
+        // ==================================================
+        // MOSTRAR NUMERO ACTUAL
+        // ==================================================
+
+        mostrar_display(contador);
+
+
+        // ==================================================
+        // BOTON UP
+        // ==================================================
+
+        if(PORTAbits.RA0 == 0)
+        {
+            // Anti-rebote
+            __delay_ms(10);
+
+            // Confirmar pulsacion
+            if(PORTAbits.RA0 == 0)
+            {
+
+                // Si esta en 99 vuelve a 00
+                if(contador == 99)
+                {
+                    contador = 0;
+                }
+                else
+                {
+                    contador++;
+                }
+
+
+                // Esperar a que se suelte el boton
+                // mientras se mantiene el display funcionando
+
+                while(PORTAbits.RA0 == 0)
+                {
+                    mostrar_display(contador);
+                }
+            }
+        }
+
+
+        // ==================================================
+        // BOTON DOWN
+        // ==================================================
+
+        if(PORTAbits.RA1 == 0)
+        {
+            // Anti-rebote
+            __delay_ms(10);
+
+            // Confirmar pulsacion
+            if(PORTAbits.RA1 == 0)
+            {
+
+                // Si esta en 00 vuelve a 99
+                if(contador == 0)
+                {
+                    contador = 99;
+                }
+                else
+                {
+                    contador--;
+                }
+
+
+                // Esperar a que se suelte el boton
+                // mientras se mantiene el display funcionando
+
+                while(PORTAbits.RA1 == 0)
+                {
+                    mostrar_display(contador);
+                }
+            }
+        }
+
+    }
+}
+
+```
 
 ## 9. Evidencias
 
